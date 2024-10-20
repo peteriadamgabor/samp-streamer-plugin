@@ -15,6 +15,9 @@ jobs:
   build-windows-release:
     runs-on: windows-2019
     steps:
+    - name: Set UTF-8 Encoding
+      run: chcp 65001
+
     - uses: actions/checkout@v2
       with:
         submodules: recursive
@@ -51,9 +54,13 @@ jobs:
       with:
         name: streamer-win-release-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Release
+
   build-windows-debug:
     runs-on: windows-2019
     steps:
+    - name: Set UTF-8 Encoding
+      run: chcp 65001
+
     - uses: actions/checkout@v2
       with:
         submodules: recursive
@@ -90,8 +97,12 @@ jobs:
       with:
         name: streamer-win-debug-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Debug
+
   build-linux:
     runs-on: ubuntu-latest
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
 
     strategy:
       matrix:
@@ -110,6 +121,9 @@ jobs:
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
     - name: Build
+      env:
+        LANG: en_US.UTF-8
+        LC_ALL: en_US.UTF-8
       run: |
         cd docker
         CONFIG=${{ matrix.config == 'Debug' && 'Debug' || 'MinSizeRel' }} ./build.sh
