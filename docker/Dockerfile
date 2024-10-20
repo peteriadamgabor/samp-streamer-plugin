@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
-RUN \
-    dpkg --add-architecture i386 && \
+
+# Add i386 architecture and install required packages
+RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y \
         gpg \
@@ -21,9 +22,18 @@ RUN \
     && \
     useradd -m user
 
+# Set user to 'user'
 USER user
 
+# Set environment variables for Latin-1 encoding
+ENV LANG=es_ES.ISO-8859-1
+ENV LC_ALL=es_ES.ISO-8859-1
+
+# Update PATH variable
 ENV PATH=~/.local/bin:${PATH}
 
+# Copy the entrypoint script
 COPY docker-entrypoint.sh /
+
+# Set default command
 CMD /docker-entrypoint.sh
